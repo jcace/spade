@@ -6,7 +6,7 @@ go 1.19
 replace github.com/hannahhoward/cbor-gen-for => github.com/ribasushi/cbor-gen-for v0.0.0-20221121001923-01e9f6d2ca05
 
 require (
-	github.com/data-preservation-programs/go-spade-apitypes v0.0.0-20221220085036-a0c06f668ea8
+	github.com/data-preservation-programs/go-spade-apitypes v0.0.0-20230124140337-d56336d56e09
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/dustin/go-humanize v1.0.0
 	github.com/filecoin-project/go-address v1.1.0
