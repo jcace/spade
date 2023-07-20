@@ -31,13 +31,23 @@ psql postgres://postgres:password@localhost:5432/
 Set up the DB Schema with the following command, from the root of this repo:
 ```bash
 psql postgres://postgres:password@localhost:5432/ < misc/pg_schema.sql 
+``` 
+
+### Lotus
+You need both a `lotus-lite` node and a lotus `fullnode` (called `lotus-heavy` in the codebase) to run spade.
+
+The `lotus-heavy` node requires the `read` permissions. You can get the auth info by running the following command:
+
+```bash
+lotus auth api-info --perm read
 ```
 
 ## Running
-Run the webapi
+
+### WebAPI
 
 ```bash
-./bin/spade-webapi --pg-connstring postgres://postgres:password@localhost:5432/
+./bin/spade-webapi --pg-connstring postgres://postgres:password@localhost:5432/ --lotus-api-heavy http://V32-VAN1-MN-01:10000 --lotus-api-heavy-token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBbGxvdyI6WyJyZWFkIiwid3JpdGUiXX0.xlBaVUQmLo3F36pXbnAJCwqvqBAU3lesdS3YMp632z4
 ```
 
 Flags:
@@ -60,7 +70,11 @@ Verify that it's working
 curl http://localhost:8080/sp/
 ```
 
-
+### Cron
+#### propose pending
+```bash
+./bin/spade-cron --pg-connstring postgres://postgres:password@localhost:5432/ propose-pending 
+```
 
 
 ## rough notes
@@ -78,3 +92,10 @@ error":"RPC client error: sendRequest failed: Post \"http://localhost:1234/rpc/v
 ```
 
 Looks like we need to get the fullnode connecting.
+
+### RPC call fails:
+Ran into a small issue. this line fails with "message": "method 'Filecoin.StateGetBeaconEntry' not found".
+I’m able to fix it if I hit my lotus-daemon on /rpc/v1,  however when you construct the RPC client in go-toolbox-interplanetary you specify /rpc/v0 . I just want to double check if we should update that to use /rpc/v1, or if the issue is caused by something on my side (am running Lotus Daemon 1.23.1 , maybe  this was changed in a recent release?)
+
+Published new version of go-toolbox-interplanetary with the fix.
+https://github.com/jcace/go-toolbox-interplanetary
